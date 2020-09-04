@@ -357,6 +357,7 @@ class CourseEvals extends React.Component {
       commented_date: new Date(),
       agree_to_share_with_wtsa: newEvalAgreeToShare,
     };
+    console.log(newEval);
   };
 
   render() {
@@ -447,7 +448,7 @@ class CourseEvals extends React.Component {
                       />
                     </span>
                     <AddEvaluationButton onClick={this.toggleAddEvaluationForm}>
-                      <FontAwesomeIcon icon={faPen} /> Add evaluations
+                      <FontAwesomeIcon icon={faPen} /> Add Reviews
                     </AddEvaluationButton>
                   </StyledSubHeading>
                   <Disclaimer>
@@ -461,7 +462,7 @@ class CourseEvals extends React.Component {
                       thisCourseEvalsLength={thisCourseEvals.length}
                     />
                     <EvalsList
-                      evaluations={thisCourseEvals}
+                      reviews={thisCourseEvals}
                       searchLang={searchLang}
                       reviewLang={reviewLang}
                     />
