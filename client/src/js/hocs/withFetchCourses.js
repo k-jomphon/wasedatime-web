@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { STATE_NAME } from "../../localForage";
 import { fetchCourses, hydrateAddedCourses } from "../actions/syllabus";
 import {
   getIsFetching,
@@ -20,6 +21,15 @@ import FetchError from "../components/FetchError";
 
 const withFetchCourses = (WrappedComponent) => {
   class WithFetchCoursesComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      // window.addEventListener("storage", (event) => {
+      //   if (event.key == STATE_NAME) {
+      //     this.setState({ state: this.state });
+      //   }
+      // });
+    }
+
     componentDidMount() {
       if (!this.props.fetchedCourseIds.length) {
         this.props.fetchCourses();

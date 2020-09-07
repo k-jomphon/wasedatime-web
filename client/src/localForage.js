@@ -2,7 +2,7 @@ import localForage from "localforage";
 
 export const LNG_KEY = "wasedatime-2020-lng";
 const PREV_STATE_NAME = "wasedatime-2019-state";
-const STATE_NAME = "wasedatime-2020-state";
+export const STATE_NAME = "wasedatime-2020-state";
 const STATE_FETCHED_COURSES_NAME = "wasedatime-2020-state-fc";
 const DATA_TO_SAVE = [LNG_KEY, STATE_NAME, STATE_FETCHED_COURSES_NAME];
 
@@ -17,11 +17,9 @@ export const loadState = () => {
     console.error(error);
   }
 
-  return Promise.all([
-    localForage.getItem(STATE_NAME),
-    localForage.getItem(STATE_FETCHED_COURSES_NAME),
-  ])
-    .then((states) => {
+  return localForage
+    .getItem(STATE_FETCHED_COURSES_NAME)
+    .then((fetchedCoursesFromLocalForage) => {
       let state;
       let fetchedCourses;
       if (prevState !== null) {
@@ -32,8 +30,15 @@ export const loadState = () => {
           list: {},
         };
       } else {
-        state = states[0];
-        fetchedCourses = states[1];
+        try {
+          const serializedState = localStorage.getItem(STATE_NAME);
+          if (serializedState !== null) {
+            state = JSON.parse(serializedState);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+        fetchedCourses = fetchedCoursesFromLocalForage;
 
         let needsUpdate = false;
         if (fetchedCourses !== null) {
@@ -102,16 +107,22 @@ export const saveState = (state) => {
     }
   }
   const { fetchedCourses, ...rest } = state;
-  localForage
-    .setItem(STATE_NAME, rest)
-    .then((value) => {})
-    .catch((error) => {
-      console.error(error);
-    });
+  // localForage
+  //   .setItem(STATE_NAME, rest)
+  //   .then((value) => {})
+  //   .catch((error) => {
+  //     console.error(error);
+  //   });
   localForage
     .setItem(STATE_FETCHED_COURSES_NAME, fetchedCourses)
     .then((value) => {})
     .catch((error) => {
       console.error(error);
     });
+  try {
+    const serializedState = JSON.stringify(rest);
+    localStorage.setItem(STATE_NAME, serializedState);
+  } catch (error) {
+    console.error(error);
+  }
 };
